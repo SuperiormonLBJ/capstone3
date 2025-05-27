@@ -15,26 +15,23 @@ public class WebSecurityConfig {
 
   @Bean
   SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-    http.authorizeHttpRequests(
-            auth ->
-                auth.requestMatchers("/logout", "/login")
-                    .permitAll()
-                    .requestMatchers(
-                        "/",
-                        "/aboutus",
-                        "/new",
-                        "/images/*",
-                        "/edit/*",
-                        "/delete/*",
-                        "/save",
-                        "/account/*",
-                        "/account/delete/*",
-                        "/account/view/*",
-                        "/transaction/*",
-                        "/transaction/create/*")
-                    .authenticated())
-        .formLogin(fl -> fl.permitAll().loginPage("/login"))
-        .logout((logout) -> logout.logoutSuccessUrl("/login"))
+    http
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
+            .requestMatchers("/login", "/logout").permitAll()
+            .requestMatchers("/admin/**").hasRole("ADMIN")
+            .requestMatchers("/teller/**").hasRole("TELLER")
+            .anyRequest().authenticated()
+        )
+        .formLogin(form -> form
+            .loginPage("/login")
+            .defaultSuccessUrl("/", true)
+            .permitAll()
+        )
+        .logout(logout -> logout
+            .logoutSuccessUrl("/login?logout")
+            .permitAll()
+        )
         .csrf(csrf -> csrf.disable());
 
     return http.build();

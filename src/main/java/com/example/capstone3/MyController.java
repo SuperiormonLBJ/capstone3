@@ -28,23 +28,31 @@ public class MyController {
 
   @GetMapping("/login")
   public String login() {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    if (auth != null && auth.isAuthenticated() && !auth.getName().equals("anonymousUser")) {
+      return "redirect:/";
+    }
     return "login";
   }
 
-  @RequestMapping("/")
+  @GetMapping("/")
   public String showMain(Model model, Principal principal) {
-    List<User> usersList = (List<User>) userRepository.findAll();
-    model.addAttribute("usersList", usersList);
+    if (principal == null) {
+      return "redirect:/login";
+    }
+
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    boolean hasAdminRole = authentication.getAuthorities().stream()
+        .anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"));
+    boolean hasTellerRole = authentication.getAuthorities().stream()
+        .anyMatch(r -> r.getAuthority().equals("ROLE_TELLER"));
+
     model.addAttribute("username", principal.getName());
     model.addAttribute("principal", principal);
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    boolean hasAdminRole =
-        authentication.getAuthorities().stream()
-            .anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"));
-    boolean hasTellerRole =
-        authentication.getAuthorities().stream()
-            .anyMatch(r -> r.getAuthority().equals("ROLE_TELLER"));
+
     if (hasAdminRole) {
+      List<User> usersList = (List<User>) userRepository.findAll();
+      model.addAttribute("usersList", usersList);
       return "adminindex";
     } else if (hasTellerRole) {
       List<Account> accountList = accountRepository.findAllByOrderByCustomerAsc();
@@ -62,31 +70,46 @@ public class MyController {
     return "adduser";
   }
 
-  @RequestMapping("/edit/{id}")
+  @GetMapping("/edit/{id}")
   public String editUser(@PathVariable("id") Long id, Model model) {
-    User user = userRepository.findById(id).orElseThrow();
-    List<Role> listRoles = (List<Role>) roleRepository.findAll();
-    model.addAttribute("user", user);
-    model.addAttribute("listRoles", listRoles);
-    model.addAttribute("id", id);
-
-    return "edituser";
+    try {
+      User user = userRepository.findById(id)
+          .orElseThrow(() -> new RuntimeException("User not found"));
+      List<Role> listRoles = (List<Role>) roleRepository.findAll();
+      
+      model.addAttribute("user", user);
+      model.addAttribute("listRoles", listRoles);
+      model.addAttribute("id", id);
+      
+      return "edituser";
+    } catch (Exception e) {
+      return "redirect:/?error=User not found";
+    }
   }
 
-  /*
-   * new created user has no password,need to read previous
-   */
   @PostMapping("/edit/{id}")
   public String save_editUser(
-      @ModelAttribute("user") User user,
-      @RequestParam("userRole") Long role_id,
-      @PathVariable("id") Long id) {
-    user.setUserRoles(roleRepository.findById(role_id).get());
-    User user_old = userRepository.findById(id).orElseThrow();
-    user.setPassword(user_old.getPassword());
-    user.setEnabled(user_old.isEnabled());
-    userRepository.save(user);
-    return "redirect:/";
+          @ModelAttribute("user") User user,
+          @RequestParam("userRole") Long role_id,
+          @PathVariable("id") Long id) {
+    try {
+      User existingUser = userRepository.findById(id)
+          .orElseThrow(() -> new RuntimeException("User not found"));
+      
+      // Preserve existing password and enabled status
+      user.setPassword(existingUser.getPassword());
+      user.setEnabled(existingUser.isEnabled());
+      
+      // Set the new role
+      Role newRole = roleRepository.findById(role_id)
+          .orElseThrow(() -> new RuntimeException("Role not found"));
+      user.setUserRoles(newRole);
+      
+      userRepository.save(user);
+      return "redirect:/?success=User updated successfully";
+    } catch (Exception e) {
+      return "redirect:/?error=Failed to update user";
+    }
   }
 
   @RequestMapping("/delete/{id}")

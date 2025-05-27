@@ -1,80 +1,113 @@
-<!doctype html>
-<html xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
   <head>
-    <meta charset="ISO-8859-1" />
-    <title>BBC - Add User</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-      crossorigin="anonymous"
-    />
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-      crossorigin="anonymous"
-    ></script>
-    <style>
-      .centered-content {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        background-color: transparent;
-      }
-
-      .centered-image {
-        display: block;
-        margin: 0 auto;
-      }
-    </style>
+    <meta charset="UTF-8">
+    <title>About Us - Banking System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/styles.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   </head>
-  <body class="bg-dark shadow-2-strong text-white">
-    <div th:replace="components :: nav"></div>
-
-    <h1 class="centered-content">
-      <s>About Us</s> <b> Big Banking Corporation </b>
-      <br />
-    </h1>
-
-    <div th:each="teamMember : ${teamMembers}">
-      <div class="card-with-spacing">
-        <img
-          class="centered-image"
-          th:src="@{/images/__${teamMember.image}__}"
-          th:alt="${teamMember.name}"
-        />
-
-        <div class="card centered-content">
-          <br />
-          <div class="card-title text-white" th:text="${teamMember.name}"></div>
-          <div class="card-desc text-white" th:text="${teamMember.role}"></div>
-          <br />
-          <a th:href="${teamMember.link}" class="btn btn-primary"
-            >LinkedIn Profile</a
-          >
-          <br />
+  <body>
+    <div class="container py-5">
+      <div class="row mb-5">
+        <div class="col-12 text-center">
+          <h1 class="display-4 mb-4">About Our Team</h1>
+          <p class="lead text-muted">Meet the talented individuals behind our banking system</p>
         </div>
       </div>
 
-      <div class="padding"></div>
+      <!-- Team Members -->
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
+        <div th:each="member : ${teamMembers}" class="col">
+          <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center">
+              <img th:src="@{'/images/' + ${member.image}}" alt="Team Member" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;">
+              <h5 class="card-title mb-1" th:text="${member.name}">Name</h5>
+              <p class="text-muted mb-3" th:text="${member.role}">Role</p>
+              <a th:href="${member.linkedin}" class="btn btn-outline-primary btn-sm" target="_blank">
+                <i class="fab fa-linkedin me-2"></i>LinkedIn
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tech Stack -->
+      <div class="row mb-5">
+        <div class="col-12">
+          <div class="card border-0 shadow-sm">
+            <div class="card-body">
+              <h2 class="h3 mb-4 text-center">Our Tech Stack</h2>
+              <div class="row g-4">
+                <div class="col-md-4">
+                  <div class="d-flex align-items-center p-3 bg-light rounded">
+                    <i class="fab fa-java fa-2x text-primary me-3"></i>
+                    <div>
+                      <h5 class="mb-1">Java</h5>
+                      <p class="text-muted mb-0">Spring Boot 6.0</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="d-flex align-items-center p-3 bg-light rounded">
+                    <i class="fas fa-database fa-2x text-success me-3"></i>
+                    <div>
+                      <h5 class="mb-1">Database</h5>
+                      <p class="text-muted mb-0">MySQL</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="d-flex align-items-center p-3 bg-light rounded">
+                    <i class="fab fa-html5 fa-2x text-danger me-3"></i>
+                    <div>
+                      <h5 class="mb-1">Frontend</h5>
+                      <p class="text-muted mb-0">HTML5, Bootstrap 5</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="d-flex align-items-center p-3 bg-light rounded">
+                    <i class="fab fa-css3-alt fa-2x text-info me-3"></i>
+                    <div>
+                      <h5 class="mb-1">Styling</h5>
+                      <p class="text-muted mb-0">CSS3, Custom Styles</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="d-flex align-items-center p-3 bg-light rounded">
+                    <i class="fas fa-shield-alt fa-2x text-warning me-3"></i>
+                    <div>
+                      <h5 class="mb-1">Security</h5>
+                      <p class="text-muted mb-0">Spring Security</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="d-flex align-items-center p-3 bg-light rounded">
+                    <i class="fas fa-code-branch fa-2x text-secondary me-3"></i>
+                    <div>
+                      <h5 class="mb-1">Version Control</h5>
+                      <p class="text-muted mb-0">Git</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Back Button -->
+      <div class="text-center">
+        <a href="/" class="btn btn-primary">
+          <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+        </a>
+      </div>
     </div>
 
-    <div style="display: flex; justify-content: center">
-      <br />
-
-      <form action="/">
-        <button style="margin: auto" class="btn btn-secondary">
-          Click here to Head Home!
-        </button>
-      </form>
-    </div>
-    <div>
-      <br />
-      <br />
-      <br />
-    </div>
-    <div th:replace="components :: footer"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background Circle -->
+    <circle cx="100" cy="100" r="90" fill="#0d6efd" fill-opacity="0.1"/>
+    
+    <!-- Bank Building -->
+    <path d="M60 140V80L100 40L140 80V140H60Z" fill="#0d6efd"/>
+    
+    <!-- Windows -->
+    <rect x="75" y="90" width="15" height="15" fill="white"/>
+    <rect x="110" y="90" width="15" height="15" fill="white"/>
+    <rect x="75" y="115" width="15" height="15" fill="white"/>
+    <rect x="110" y="115" width="15" height="15" fill="white"/>
+    
+    <!-- Door -->
+    <rect x="90" y="130" width="20" height="10" fill="white"/>
+    
+    <!-- Dollar Sign -->
+    <path d="M100 60V140M90 80H110M90 120H110" stroke="white" stroke-width="4" stroke-linecap="round"/>
+</svg> 
